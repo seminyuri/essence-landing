@@ -8716,7 +8716,10 @@ body.audience-popup-open { overflow: hidden; }
   // 5-phase scroll-scrubbed: free → bins → sort → dissolve → restored
   // ────────────────────────────────────────────
   const Manifest = {
-    PARTICLE_COUNT: (window.matchMedia('(max-width: 900px)').matches ? 18 : 28),
+    /* PARTICLE_COUNT кратно 3 — чтобы делилось равно между 3-мя контейнерами (Тип А · Б · В).
+       Desktop 48 = 16/bin (4 cols × 4 rows — full grid из дизайн-макета).
+       Mobile 36 = 12/bin (4 cols × 3 rows — пропорциональное уменьшение). */
+    PARTICLE_COUNT: (window.matchMedia('(max-width: 900px)').matches ? 36 : 48),
     SORTED_SIZE: 7,
     BIN_LEFTS_PCT: [4, 36, 68],
     BIN_WIDTH_PCT: 28,
@@ -8779,20 +8782,23 @@ body.audience-popup-open { overflow: hidden; }
       return x - Math.floor(x);
     },
 
+    /* Равное распределение: каждый бин получает PARTICLE_COUNT / 3 частиц. */
     binFor(i) {
-      if (i < 14) return 0;
-      if (i < 27) return 1;
-      return 2;
+      const perBin = this.PARTICLE_COUNT / 3;
+      return Math.min(2, Math.floor(i / perBin));
     },
     binPos(i) {
       const binIdx = this.binFor(i);
-      const idxInBin = (binIdx === 0) ? i : (binIdx === 1) ? i - 14 : i - 27;
+      const perBin = this.PARTICLE_COUNT / 3;
+      const idxInBin = i - binIdx * perBin;
       const col = idxInBin % this.BIN_COLS;
       const row = Math.floor(idxInBin / this.BIN_COLS);
+      const totalRows = Math.max(1, Math.ceil(perBin / this.BIN_COLS));
       const binLeft = this.BIN_LEFTS_PCT[binIdx];
       const padX = 3, padY = 3;
-      const cellW = (this.BIN_WIDTH_PCT - 2 * padX) / (this.BIN_COLS - 1);
-      const cellH = (this.BIN_HEIGHT_PCT - 2 * padY) / 3;
+      const cellW = (this.BIN_WIDTH_PCT - 2 * padX) / Math.max(1, this.BIN_COLS - 1);
+      /* cellH адаптивный: 4 ряда (desktop) → 5.33%, 3 ряда (mobile) → 8% */
+      const cellH = totalRows > 1 ? (this.BIN_HEIGHT_PCT - 2 * padY) / (totalRows - 1) : 0;
       const x = binLeft + padX + col * cellW;
       const binTop = 100 - this.BIN_BOTTOM_PCT - this.BIN_HEIGHT_PCT;
       const y = binTop + padY + row * cellH;
