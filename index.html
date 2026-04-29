@@ -47,14 +47,45 @@
 
 <style>
 /* ═══════════════════════════════════════════════════════════════════
+   00. FONT FALLBACKS — size-adjust для нулевого CLS при загрузке Google Fonts
+   Метрики подобраны так, чтобы системный fallback занимал столько же места,
+   сколько web-шрифт. При swap'е текст не смещается.
+   Reference: github.com/seek-oss/capsize — pre-computed for Manrope/Lora/JetBrains.
+   ═══════════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: 'Manrope-Fallback';
+  src: local('Arial');
+  size-adjust: 100.20%;
+  ascent-override: 94.92%;
+  descent-override: 23.93%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Lora-Fallback';
+  src: local('Times New Roman'), local('Times');
+  size-adjust: 105.40%;
+  ascent-override: 95.85%;
+  descent-override: 27.49%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'JetBrainsMono-Fallback';
+  src: local('Courier New'), local('Menlo'), local('Consolas');
+  size-adjust: 87%;
+  ascent-override: 80%;
+  descent-override: 25%;
+  line-gap-override: 0%;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    01. SETTINGS — design tokens
    ═══════════════════════════════════════════════════════════════════ */
 :root {
-  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-display: 'Manrope', -apple-system, system-ui, sans-serif;
-  --font-italic: 'Lora', 'Times New Roman', Georgia, serif;
-  --font-brand: 'Lora', 'Times New Roman', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  --font-sans: 'Manrope', 'Manrope-Fallback', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-display: 'Manrope', 'Manrope-Fallback', -apple-system, system-ui, sans-serif;
+  --font-italic: 'Lora', 'Lora-Fallback', 'Times New Roman', Georgia, serif;
+  --font-brand: 'Lora', 'Lora-Fallback', 'Times New Roman', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'JetBrainsMono-Fallback', 'SF Mono', ui-monospace, monospace;
 
   --fs-h1: clamp(2.25rem, 1.4rem + 3.4vw, 4.6rem);
   --fs-h2: clamp(1.75rem, 1.125rem + 3.5vw, 4rem);
