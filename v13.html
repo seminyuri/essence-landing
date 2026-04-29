@@ -317,22 +317,13 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
 }
 .persona-ribbon::-webkit-scrollbar { display: none; }
 
-/* ─── Лейбл «✦ Хочу понять:» ─── */
+/* ─── Лейбл «Хочу понять:» — italic Lora, без декора ─── */
 .ribbon-label {
   display: none;  /* скрыт на мобиле, появляется с 768px */
-  align-items: baseline;
-  gap: 5px;
   margin-right: 4px;
   flex-shrink: 0;
   white-space: nowrap;
   user-select: none;
-}
-.ribbon-mark {
-  color: var(--brand-rose-gold);
-  font-size: 13px;
-  line-height: 1;
-}
-.ribbon-label-text {
   font-family: var(--font-italic);
   font-style: italic;
   font-weight: 400;
@@ -427,10 +418,8 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
     justify-content: flex-end;
     flex-wrap: wrap;
   }
-  .ribbon-label { display: inline-flex; }
+  .ribbon-label { display: inline-block; font-size: 13px; }
   .pip { padding: 5px 12px; font-size: 12px; }
-  .ribbon-mark { font-size: 14px; }
-  .ribbon-label-text { font-size: 13px; }
 }
 @media (min-width: 1280px) {
   .persona-ribbon { gap: 10px; flex-wrap: nowrap; }
@@ -5614,9 +5603,7 @@ body.audience-popup-open { overflow: hidden; }
     <span class="visually-hidden">Суть · The Essence — главная</span>
   </a>
   <nav class="persona-ribbon" aria-label="Адаптация сайта под аудиторию">
-    <span class="ribbon-label" aria-hidden="true">
-      <span class="ribbon-mark">✦</span><span class="ribbon-label-text">Хочу понять:</span>
-    </span>
+    <span class="ribbon-label" aria-hidden="true">Хочу понять:</span>
     <button class="pip" data-persona-pip="anya" aria-pressed="false" aria-label="Хочу понять себя — адаптировать сайт под этот контекст" style="--pip-i:0">Себя</button>
     <button class="pip" data-persona-pip="darya" aria-pressed="false" aria-label="Хочу понять ребёнка — адаптировать сайт под этот контекст" style="--pip-i:1">Ребёнка</button>
     <button class="pip" data-persona-pip="pair" aria-pressed="false" aria-label="Хочу понять пару — адаптировать сайт под этот контекст" style="--pip-i:2">Пару</button>
