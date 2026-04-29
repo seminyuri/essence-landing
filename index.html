@@ -265,8 +265,8 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   padding: 6px var(--edge);
   min-height: var(--header-h);
   background: var(--surface-elev);
-  backdrop-filter: blur(8px) saturate(130%);
-  -webkit-backdrop-filter: blur(8px) saturate(130%);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 0.5px solid var(--line-soft);
 }
 .brand-link {
@@ -481,13 +481,13 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
    ═══════════════════════════════════════════════════════════════════ */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.42s var(--ease-out), transform 0.42s var(--ease-out);
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
 }
 [data-reveal].is-visible { opacity: 1; transform: none; }
-[data-reveal-delay="1"] { transition-delay: 60ms; }
-[data-reveal-delay="2"] { transition-delay: 120ms; }
-[data-reveal-delay="3"] { transition-delay: 180ms; }
+[data-reveal-delay="1"] { transition-delay: 120ms; }
+[data-reveal-delay="2"] { transition-delay: 240ms; }
+[data-reveal-delay="3"] { transition-delay: 360ms; }
 
 /* ═══════════════════════════════════════════════════════════════════
    08. SCREEN 1 · HERO
@@ -749,8 +749,8 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   border-radius: var(--r-lg);
   padding: clamp(22px, 4vw, 32px);
   box-shadow: 0 30px 80px -40px var(--glow), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-  backdrop-filter: blur(10px) saturate(130%);
-  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
 }
 .form-header {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -1089,14 +1089,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   .manifest-particle { animation: none; opacity: 0; }
 }
 
-/* PERF: pause animations когда секция вне viewport.
-   Toggled из JS через IntersectionObserver — class .is-offscreen */
-#s02-manifest.is-offscreen .manifest-particle,
-#s02-manifest.is-offscreen .particle.breathing,
-#s04-transmission.is-offscreen *,
-#s05-pipeline.is-offscreen * {
-  animation-play-state: paused !important;
-}
 .manifest-sticky {
   position: sticky; top: 0;
   height: 100vh; height: 100dvh;
@@ -1190,8 +1182,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   position: absolute;
   border-radius: 50%;
   z-index: 2;
-  /* PERF: только compositing-only props в will-change */
-  will-change: transform, opacity;
+  will-change: transform, left, top, width, height, background-color, opacity;
   pointer-events: none;
 }
 .particle.breathing {
@@ -1200,10 +1191,9 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 }
 .particle:not(.breathing) { animation: none; }
 
-/* PERF: opacity-only breathe чтобы не конфликтовать с JS transform */
 @keyframes particleBreathe {
-  0%, 100% { opacity: var(--base-opacity, 0.8); }
-  50%      { opacity: 1; }
+  0%, 100% { transform: scale(1); opacity: var(--base-opacity, 0.8); }
+  50% { transform: scale(1.18); opacity: 1; }
 }
 
 .manifest-text-wrap {
@@ -8504,35 +8494,14 @@ body.audience-popup-open { overflow: hidden; }
   // ────────────────────────────────────────────
   const Reveal = {
     init() {
+      // Lazy-load disabled: показываем все элементы сразу, без IntersectionObserver.
+      // Hero успевает анимироваться через transition при добавлении класса в первый кадр.
       const els = document.querySelectorAll('[data-reveal]');
       const cardGroups = document.querySelectorAll('.cat-cards');
-      if (Motion.reduced() || !window.IntersectionObserver) {
+      requestAnimationFrame(() => {
         els.forEach(el => el.classList.add('is-visible'));
         cardGroups.forEach(el => el.classList.add('is-visible'));
-        return;
-      }
-      // rootMargin = одно окно вперёд (industry standard для незаметной отложенной анимации):
-      // элементы reveal'ятся когда до них ещё целое окно прокрутки — пользователь
-      // никогда не видит "пустое место" даже при быстром скролле.
-      const REVEAL_MARGIN = '500px 0px 1200px 0px';
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-visible');
-            obs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0, rootMargin: REVEAL_MARGIN });
-      els.forEach(el => obs.observe(el));
-      const cardObs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('is-visible');
-            cardObs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0, rootMargin: REVEAL_MARGIN });
-      cardGroups.forEach(el => cardObs.observe(el));
+      });
     }
   };
 
@@ -8594,7 +8563,7 @@ body.audience-popup-open { overflow: hidden; }
   // 5-phase scroll-scrubbed: free → bins → sort → dissolve → restored
   // ────────────────────────────────────────────
   const Manifest = {
-    PARTICLE_COUNT: (window.matchMedia('(max-width: 900px)').matches ? 18 : 30),
+    PARTICLE_COUNT: 40,
     SORTED_SIZE: 7,
     BIN_LEFTS_PCT: [4, 36, 68],
     BIN_WIDTH_PCT: 28,
@@ -8610,10 +8579,6 @@ body.audience-popup-open { overflow: hidden; }
     palette: [],
     lastProgress: -1,
 
-    BASE_SIZE: 18,  // Все частицы рендерятся с этим размером, scale меняет визуальный
-    sceneW: 0,
-    sceneH: 0,
-
     init() {
       this.scene = document.getElementById('manifestScene');
       if (!this.scene) return;
@@ -8628,14 +8593,7 @@ body.audience-popup-open { overflow: hidden; }
         document.getElementById('sortBin3')
       ];
       this.refreshPalette();
-      this.measureScene();
       this.buildParticles();
-      // PERF: re-measure on resize, не на каждый scroll
-      window.addEventListener('resize', () => {
-        this.measureScene();
-        this.lastProgress = -1;  // force re-render
-        this.update(this._lastP || 0);
-      }, { passive: true });
       // Theme switch listener — re-tint particles
       const obs = new MutationObserver(() => {
         this.refreshPalette();
@@ -8644,13 +8602,6 @@ body.audience-popup-open { overflow: hidden; }
       obs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-persona'] });
       // Reduced motion: snap to final state
       if (Motion.reduced()) this.update(1);
-    },
-
-    measureScene() {
-      if (!this.scene) return;
-      const r = this.scene.getBoundingClientRect();
-      this.sceneW = r.width;
-      this.sceneH = r.height;
     },
 
     refreshPalette() {
@@ -8696,9 +8647,7 @@ body.audience-popup-open { overflow: hidden; }
     },
 
     buildParticles() {
-      // PERF: размер фиксированный (BASE_SIZE), позиция через transform — не layout
       const insertBefore = this.scene.querySelector('.manifest-text-wrap');
-      const B = this.BASE_SIZE;
       for (let i = 0; i < this.PARTICLE_COUNT; i++) {
         const el = document.createElement('div');
         el.className = 'particle breathing';
@@ -8713,13 +8662,10 @@ body.audience-popup-open { overflow: hidden; }
         const freeX = 8 + this.seededRandom(i * 41 + 19) * 84;
         const freeY = 18 + this.seededRandom(i * 43 + 23) * 38;
 
-        // Фиксированный размер (один раз) — никаких layout-trigger props в update
-        el.style.position = 'absolute';
-        el.style.left = '0';
-        el.style.top = '0';
-        el.style.width = B + 'px';
-        el.style.height = B + 'px';
-        el.style.willChange = 'transform, opacity';
+        el.style.left = origX + '%';
+        el.style.top = origY + '%';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
         el.style.backgroundColor = color;
         el.style.setProperty('--breathe-dur', breatheDur + 's');
         el.style.setProperty('--breathe-delay', breatheDelay + 's');
@@ -8737,15 +8683,6 @@ body.audience-popup-open { overflow: hidden; }
       }
       // Bins start hidden
       this.bins.forEach(b => { if (b) { b.style.opacity = '0'; b.style.transform = 'translateY(20px)'; } });
-    },
-
-    // PERF helper: transform-only positioning (compositing-only, не layout)
-    posTransform(xPct, yPct, sizePx) {
-      const B = this.BASE_SIZE;
-      const px = (xPct / 100) * this.sceneW - B / 2;
-      const py = (yPct / 100) * this.sceneH - B / 2;
-      const sc = sizePx / B;
-      return 'translate(' + px + 'px,' + py + 'px) scale(' + sc + ')';
     },
 
     retintAll() {
@@ -8773,28 +8710,38 @@ body.audience-popup-open { overflow: hidden; }
     },
 
     setFree(el, d) {
-      el.style.transform = this.posTransform(d.origX, d.origY, d.origSize);
+      el.style.left = d.origX + '%';
+      el.style.top = d.origY + '%';
+      el.style.width = d.origSize + 'px';
+      el.style.height = d.origSize + 'px';
       el.style.backgroundColor = d.origColor;
       el.style.opacity = String(d.baseOpacity);
       if (!el.classList.contains('breathing')) el.classList.add('breathing');
     },
     setSorted(el, d) {
-      el.style.transform = this.posTransform(d.binX, d.binY, this.SORTED_SIZE);
+      el.style.left = d.binX + '%';
+      el.style.top = d.binY + '%';
+      el.style.width = this.SORTED_SIZE + 'px';
+      el.style.height = this.SORTED_SIZE + 'px';
       el.style.backgroundColor = this.sortedColor;
       el.style.opacity = '0.85';
       if (el.classList.contains('breathing')) el.classList.remove('breathing');
     },
     setRestored(el, d) {
-      el.style.transform = this.posTransform(d.freeX, d.freeY, d.origSize);
+      el.style.left = d.freeX + '%';
+      el.style.top = d.freeY + '%';
+      el.style.width = d.origSize + 'px';
+      el.style.height = d.origSize + 'px';
       el.style.backgroundColor = d.origColor;
       el.style.opacity = String(d.baseOpacity);
       if (!el.classList.contains('breathing')) el.classList.add('breathing');
     },
     setInterp(el, d, fx, fy, fs, fc, tx, ty, ts, tc, t) {
-      const x = this.lerp(fx, tx, t);
-      const y = this.lerp(fy, ty, t);
+      el.style.left = this.lerp(fx, tx, t) + '%';
+      el.style.top = this.lerp(fy, ty, t) + '%';
       const sz = this.lerp(fs, ts, t);
-      el.style.transform = this.posTransform(x, y, sz);
+      el.style.width = sz + 'px';
+      el.style.height = sz + 'px';
       el.style.backgroundColor = this.lerpColor(fc, tc, t);
       el.style.opacity = String(this.lerp(d.baseOpacity, 0.85, t));
       if (t > 0.5) {
@@ -9740,25 +9687,6 @@ body.audience-popup-open { overflow: hidden; }
   };
 
   // ────────────────────────────────────────────
-  // OFFSCREEN PAUSE — pause CSS/JS animations в тяжёлых секциях когда вне viewport
-  // ────────────────────────────────────────────
-  const OffscreenPause = {
-    init() {
-      if (!window.IntersectionObserver) return;
-      const ids = ['s02-manifest', 's04-transmission', 's05-pipeline'];
-      ids.forEach(id => {
-        const sec = document.getElementById(id);
-        if (!sec) return;
-        sec.classList.add('is-offscreen');
-        const obs = new IntersectionObserver(([entry]) => {
-          sec.classList.toggle('is-offscreen', !entry.isIntersecting);
-        }, { rootMargin: '200px 0px 200px 0px', threshold: 0 });
-        obs.observe(sec);
-      });
-    }
-  };
-
-  // ────────────────────────────────────────────
   // INIT
   // ────────────────────────────────────────────
   document.addEventListener('DOMContentLoaded', () => {
@@ -9773,7 +9701,6 @@ body.audience-popup-open { overflow: hidden; }
       Stages.setup('#s04-transmission', 5);
       Stages.setup('#s05-pipeline', 5);
     }
-    OffscreenPause.init();
     Peek.init();
     Form.init();
     Progress.init();
