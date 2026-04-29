@@ -373,7 +373,7 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   display: flex; align-items: center;
   gap: clamp(8px, 1.6vw, 18px);
   padding: 6px var(--edge);
-  min-height: var(--header-h);
+  height: var(--header-h);  /* fixed height — не зависит от font-swap внутренних элементов */
   background: color-mix(in oklch, var(--bg) 96%, transparent);
   border-bottom: 0.5px solid var(--line-soft);
 }
@@ -467,6 +467,10 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   font-size: 12px;
   color: var(--fg-muted);
   letter-spacing: 0.005em;
+  /* min-width = ширина «Хочу понять:» в Lora italic 12px (84px замерено) +2px запас.
+     Предотвращает CLS при font swap: контейнер фиксирован, текст рендерится внутри. */
+  min-width: 86px;
+  display: inline-block;
 }
 
 /* ─── Чипы (общая база) ─── */
