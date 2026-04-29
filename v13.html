@@ -8795,13 +8795,14 @@ body.audience-popup-open { overflow: hidden; }
       const row = Math.floor(idxInBin / this.BIN_COLS);
       const totalRows = Math.max(1, Math.ceil(perBin / this.BIN_COLS));
       const binLeft = this.BIN_LEFTS_PCT[binIdx];
-      const padX = 3, padY = 3;
+      /* padTop=3% / padBottom=5% — чуть больше зазор снизу под подпись «ТИП А/Б/В». */
+      const padX = 3, padTop = 3, padBottom = 5;
       const cellW = (this.BIN_WIDTH_PCT - 2 * padX) / Math.max(1, this.BIN_COLS - 1);
-      /* cellH адаптивный: 4 ряда (desktop) → 5.33%, 3 ряда (mobile) → 8% */
-      const cellH = totalRows > 1 ? (this.BIN_HEIGHT_PCT - 2 * padY) / (totalRows - 1) : 0;
+      /* cellH адаптивный: 4 ряда (desktop) → 4.67%, 3 ряда (mobile) → 7% */
+      const cellH = totalRows > 1 ? (this.BIN_HEIGHT_PCT - padTop - padBottom) / (totalRows - 1) : 0;
       const x = binLeft + padX + col * cellW;
       const binTop = 100 - this.BIN_BOTTOM_PCT - this.BIN_HEIGHT_PCT;
-      const y = binTop + padY + row * cellH;
+      const y = binTop + padTop + row * cellH;
       return { x, y };
     },
 
