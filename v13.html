@@ -317,13 +317,30 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
 }
 .persona-ribbon::-webkit-scrollbar { display: none; }
 
-/* ─── Лейбл «Хочу понять:» — italic Lora, без декора ─── */
+/* ─── Лейбл «› Хочу понять:» — chevron + italic Lora ─── */
 .ribbon-label {
   display: none;  /* скрыт на мобиле, появляется с 768px */
+  align-items: center;
+  gap: 6px;
   margin-right: 4px;
   flex-shrink: 0;
   white-space: nowrap;
   user-select: none;
+}
+.ribbon-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-rose-gold);
+  width: 11px;
+  height: 14px;
+}
+.ribbon-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.ribbon-label-text {
   font-family: var(--font-italic);
   font-style: italic;
   font-weight: 400;
@@ -418,7 +435,9 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
     justify-content: flex-end;
     flex-wrap: wrap;
   }
-  .ribbon-label { display: inline-block; font-size: 13px; }
+  .ribbon-label { display: inline-flex; }
+  .ribbon-label-text { font-size: 13px; }
+  .ribbon-mark { width: 12px; height: 15px; }
   .pip { padding: 5px 12px; font-size: 12px; }
 }
 @media (min-width: 1280px) {
@@ -5603,7 +5622,14 @@ body.audience-popup-open { overflow: hidden; }
     <span class="visually-hidden">Суть · The Essence — главная</span>
   </a>
   <nav class="persona-ribbon" aria-label="Адаптация сайта под аудиторию">
-    <span class="ribbon-label" aria-hidden="true">Хочу понять:</span>
+    <span class="ribbon-label" aria-hidden="true">
+      <span class="ribbon-mark">
+        <svg viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="3 3 9 8 3 13"/>
+        </svg>
+      </span>
+      <span class="ribbon-label-text">Хочу понять:</span>
+    </span>
     <button class="pip" data-persona-pip="anya" aria-pressed="false" aria-label="Хочу понять себя — адаптировать сайт под этот контекст" style="--pip-i:0">Себя</button>
     <button class="pip" data-persona-pip="darya" aria-pressed="false" aria-label="Хочу понять ребёнка — адаптировать сайт под этот контекст" style="--pip-i:1">Ребёнка</button>
     <button class="pip" data-persona-pip="pair" aria-pressed="false" aria-label="Хочу понять пару — адаптировать сайт под этот контекст" style="--pip-i:2">Пару</button>
