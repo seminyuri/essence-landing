@@ -178,6 +178,10 @@ html {
   overflow-x: clip;
   /* Solid backdrop: prevents white flash on fast scroll (bg-grad fades far below) */
   background-color: var(--bg);
+  /* Reserve scrollbar gutter ALWAYS — prevents content shifting right when
+     <dialog>.showModal() / body.audience-popup-open hides scrollbar.
+     Critical for CLS on desktop Chrome (Linux Lighthouse runs measure 0.533 without this). */
+  scrollbar-gutter: stable;
 }
 body {
   min-height: 100vh; min-height: 100dvh;
