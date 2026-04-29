@@ -176,10 +176,13 @@ html {
   scroll-padding-top: calc(var(--header-h) + 8px);
   /* Strict horizontal containment — clip is more robust than hidden */
   overflow-x: clip;
+  /* Solid backdrop: prevents white flash on fast scroll (bg-grad fades far below) */
+  background-color: var(--bg);
 }
 body {
   min-height: 100vh; min-height: 100dvh;
-  background: var(--bg-grad);
+  background: var(--bg-grad) var(--bg);
+  background-attachment: fixed;
   color: var(--fg-body);
   font-family: var(--font-sans);
   font-weight: 300;
@@ -8508,8 +8511,10 @@ body.audience-popup-open { overflow: hidden; }
         cardGroups.forEach(el => el.classList.add('is-visible'));
         return;
       }
-      // rootMargin положительный → reveal стартует ДО появления в viewport,
-      // чтобы при быстром скролле элементы уже были видимы, а не догоняли
+      // rootMargin = одно окно вперёд (industry standard для незаметной отложенной анимации):
+      // элементы reveal'ятся когда до них ещё целое окно прокрутки — пользователь
+      // никогда не видит "пустое место" даже при быстром скролле.
+      const REVEAL_MARGIN = '500px 0px 1200px 0px';
       const obs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
           if (e.isIntersecting) {
@@ -8517,7 +8522,7 @@ body.audience-popup-open { overflow: hidden; }
             obs.unobserve(e.target);
           }
         });
-      }, { threshold: 0, rootMargin: '0px 0px 200px 0px' });
+      }, { threshold: 0, rootMargin: REVEAL_MARGIN });
       els.forEach(el => obs.observe(el));
       const cardObs = new IntersectionObserver((entries) => {
         entries.forEach(e => {
@@ -8526,7 +8531,7 @@ body.audience-popup-open { overflow: hidden; }
             cardObs.unobserve(e.target);
           }
         });
-      }, { threshold: 0, rootMargin: '0px 0px 200px 0px' });
+      }, { threshold: 0, rootMargin: REVEAL_MARGIN });
       cardGroups.forEach(el => cardObs.observe(el));
     }
   };
