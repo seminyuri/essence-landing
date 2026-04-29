@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Икона ribbon — 10 вариантов</title>
+<style>
+:root {
+  --bg: #0f0d08;
+  --bg-grad: radial-gradient(ellipse at 50% -8%, #2a2418 0%, #1a1610 45%, #0f0d08 100%);
+  --fg: #FBF8F3;
+  --fg-body: #E8E2D8;
+  --fg-muted: rgba(251, 248, 243, 0.65);
+  --fg-faint: rgba(251, 248, 243, 0.45);
+  --line: rgba(251, 248, 243, 0.12);
+  --accent: #E8B898;
+  --glow: rgba(232, 184, 152, 0.35);
+  --brand-rose-gold: #B8946C;
+  --btn-fg: #1a1610;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--bg); }
+body {
+  background: var(--bg-grad);
+  min-height: 100dvh;
+  color: var(--fg-body);
+  font-family: 'Manrope', system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.55;
+  padding: 60px 24px 120px;
+  -webkit-font-smoothing: antialiased;
+}
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500&family=Lora:ital,wght@1,400&family=JetBrains+Mono:wght@400&display=swap');
+body { font-family: 'Manrope', system-ui, sans-serif; }
+h1 {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 200;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  color: var(--fg);
+  text-align: center;
+  margin-bottom: 8px;
+  letter-spacing: -0.012em;
+}
+.intro {
+  text-align: center;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  color: var(--fg-muted);
+  margin-bottom: 56px;
+  font-size: 15px;
+}
+.grid {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.row {
+  border: 0.5px solid var(--line);
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.row:hover {
+  border-color: rgba(232, 184, 152, 0.28);
+  background: linear-gradient(180deg, rgba(232,184,152,0.04), transparent);
+}
+.row-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-faint);
+  margin-bottom: 14px;
+  display: block;
+}
+
+/* RIBBON STYLE — same as production */
+.ribbon {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.lbl {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-family: 'Lora', serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--fg-muted);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  margin-right: 4px;
+}
+.lbl-icon {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--brand-rose-gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lbl-icon svg { display: block; }
+
+.pip {
+  padding: 5px 12px;
+  border: 0.5px solid var(--line);
+  border-radius: 999px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--fg-muted);
+  white-space: nowrap;
+  background: transparent;
+  cursor: default;
+}
+.pip.active {
+  background: var(--accent);
+  color: var(--btn-fg);
+  border-color: var(--accent);
+  box-shadow: 0 6px 20px -6px var(--glow);
+}
+.pip.default-pip {
+  margin-left: 6px;
+  position: relative;
+}
+.pip.default-pip::before {
+  content: '·';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--fg-faint);
+  font-size: 14px;
+}
+
+.note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--fg-faint);
+  letter-spacing: 0.02em;
+  padding-top: 8px;
+  border-top: 0.5px dashed var(--line);
+}
+.note strong {
+  color: var(--fg-muted);
+  font-weight: 400;
+  font-family: 'Manrope', sans-serif;
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+
+<h1>10 вариантов иконки для «Хочу понять:»</h1>
+<p class="intro">Каждый показан в реальном контексте шапки. Ниже — почему такой вариант и что он коммуницирует.</p>
+
+<div class="grid">
+
+  <!-- 1 -->
+  <div class="row">
+    <span class="row-num">Вариант 1</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
+            <circle cx="8" cy="8" r="6.5"/>
+            <circle cx="8" cy="8" r="3.5"/>
+            <circle cx="8" cy="8" r="1" fill="currentColor"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Концентрические кружки</strong> — три вложенных круга. Брендовая нить — те же круги в watermark, mirror-eye, manifest. Sacred geometry в миниатюре. Семантика: «слои восприятия от поверхности к ядру».</p>
+  </div>
+
+  <!-- 2 -->
+  <div class="row">
+    <span class="row-num">Вариант 2</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/>
+            <circle cx="12" cy="12" r="2.6" fill="currentColor"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Тонкий глаз</strong> — line art с зрачком. Прямая семантика: «понять = увидеть». Может читаться как «watching you» — на грани, поэтому глаз сделан спокойным, не агрессивным.</p>
+  </div>
+
+  <!-- 3 -->
+  <div class="row">
+    <span class="row-num">Вариант 3</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1">
+            <circle cx="8" cy="8" r="6.5"/>
+            <circle cx="8" cy="8" r="1.6" fill="currentColor"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Точка в круге</strong> ⊙ — древний символ Солнца, медитации, фокуса. Минималистичный, восточный. Семантика: «точка осознания внутри целого».</p>
+  </div>
+
+  <!-- 4 -->
+  <div class="row">
+    <span class="row-num">Вариант 4</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon" style="font-family: 'Lora', serif; font-size: 22px; line-height: 0.6; transform: translateY(2px); color: var(--brand-rose-gold);">❝</span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Открывающая кавычка</strong> ❝ — литературный тон, как в книжной вёрстке. Подходит к Lora italic. Семантика: «вот мысль, она сейчас прозвучит».</p>
+  </div>
+
+  <!-- 5 -->
+  <div class="row">
+    <span class="row-num">Вариант 5</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon" style="color: var(--fg-faint); font-size: 13px; letter-spacing: 0;">—</span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Em-dash</strong> — — типографически премиум, редакторский тон. Минимально, не отвлекает. Похоже на стиль The New Yorker / Apple-копирайтинга.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="row">
+    <span class="row-num">Вариант 6</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="11" height="14" viewBox="0 0 12 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 3 9 8 3 13"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Шеврон ›</strong> — тонкая направляющая стрелка к чипам. Самый функциональный вариант: «выбери одно из этого». Modern, deliberate.</p>
+  </div>
+
+  <!-- 7 -->
+  <div class="row">
+    <span class="row-num">Вариант 7</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="5.5" cy="8" r="4.5"/>
+            <circle cx="10.5" cy="8" r="4.5"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Vesica Piscis</strong> — два пересекающихся круга. Sacred geometry, древний символ соединения двух точек зрения. На бренде. Семантика: «понимание рождается на пересечении».</p>
+  </div>
+
+  <!-- 8 -->
+  <div class="row">
+    <span class="row-num">Вариант 8</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon" style="font-family: 'Lora', serif; font-style: italic; font-size: 18px; line-height: 0.6; transform: translateY(1px); letter-spacing: -0.05em; color: var(--brand-rose-gold);">⁂</span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Asterism ⁂</strong> — три звёздочки треугольником. Старинный типографский знак для разделов в книгах. Premium-editorial. Семантика: «новая глава мысли».</p>
+  </div>
+
+  <!-- 9 -->
+  <div class="row">
+    <span class="row-num">Вариант 9</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="8" r="6.5"/>
+            <line x1="8" y1="2" x2="8" y2="14"/>
+            <line x1="2" y1="8" x2="14" y2="8"/>
+            <line x1="3.5" y1="3.5" x2="12.5" y2="12.5"/>
+            <line x1="12.5" y1="3.5" x2="3.5" y2="12.5"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Iris / aperture</strong> — диафрагма камеры. 8 секций «глаза-объектива». Modern, photographic, premium. Семантика: «настроить фокус восприятия».</p>
+  </div>
+
+  <!-- 10 -->
+  <div class="row">
+    <span class="row-num">Вариант 10</span>
+    <div class="ribbon">
+      <span class="lbl">
+        <span class="lbl-icon">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 1.5 L14.5 5 L14.5 11 L8 14.5 L1.5 11 L1.5 5 Z"/>
+            <circle cx="8" cy="8" r="2" fill="currentColor"/>
+          </svg>
+        </span>
+        Хочу понять:
+      </span>
+      <span class="pip active">Себя</span>
+      <span class="pip">Ребёнка</span>
+      <span class="pip">Пару</span>
+      <span class="pip">Команду</span>
+      <span class="pip">Клиентов</span>
+      <span class="pip default-pip">Общая версия</span>
+    </div>
+    <p class="note"><strong>Шестиугольник с ядром</strong> — hex frame с центральной точкой. Sacred geometry (структура соты, кристалла). Архетип «структура + центр». Modern-mystic.</p>
+  </div>
+
+</div>
+
+</body>
+</html>
