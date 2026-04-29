@@ -636,7 +636,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   overflow: visible;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;  /* был center — но при font-swap или persona-switch grid resize'ится и center пушит Y вверх. flex-start = no recenter shift */
   min-height: calc(100vh - var(--header-h));
   min-height: calc(100dvh - var(--header-h));
 }
