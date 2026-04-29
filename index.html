@@ -245,15 +245,6 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   pointer-events: none;
 }
 
-#grain {
-  position: fixed; inset: 0;
-  pointer-events: none;
-  z-index: 90;
-  opacity: 0.025;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-}
-
 /* ═══════════════════════════════════════════════════════════════════
    04. SITE HEADER (lockup + theme toggle)
    ═══════════════════════════════════════════════════════════════════ */
@@ -263,9 +254,7 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   gap: clamp(8px, 1.6vw, 18px);
   padding: 6px var(--edge);
   min-height: var(--header-h);
-  background: var(--surface-elev);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  background: color-mix(in oklch, var(--bg) 96%, transparent);
   border-bottom: 0.5px solid var(--line-soft);
 }
 .brand-link {
@@ -315,7 +304,8 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
 .theme-toggle button:hover:not([aria-pressed="true"]) { opacity: 0.85; }
 
 /* ═══════════════════════════════════════════════════════════════════
-   05. PERSONA RIBBON — теперь живёт внутри site-header
+   05. PERSONA RIBBON — живёт внутри site-header
+   Структура: ✦ Хочу понять: Себя · Ребёнка · Пару · Команду · Клиентов · Общая версия
    ═══════════════════════════════════════════════════════════════════ */
 .persona-ribbon {
   flex: 1 1 auto; min-width: 0;
@@ -326,30 +316,48 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   touch-action: pan-x;
 }
 .persona-ribbon::-webkit-scrollbar { display: none; }
+
+/* ─── Лейбл «✦ Хочу понять:» ─── */
 .ribbon-label {
-  font-size: 10px;
-  letter-spacing: var(--ls-mono-mid);
-  text-transform: uppercase;
-  color: var(--fg-faint);
-  white-space: nowrap;
-  margin-right: 6px;
+  display: none;  /* скрыт на мобиле, появляется с 768px */
+  align-items: baseline;
+  gap: 5px;
+  margin-right: 4px;
   flex-shrink: 0;
-  display: none;
+  white-space: nowrap;
+  user-select: none;
 }
-.ribbon-label .star { color: var(--brand-rose-gold); margin-right: 4px; }
-@media (min-width: 1100px) {
-  .ribbon-label { display: inline-flex; align-items: center; }
+.ribbon-mark {
+  color: var(--brand-rose-gold);
+  font-size: 13px;
+  line-height: 1;
 }
+.ribbon-label-text {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--fg-muted);
+  letter-spacing: 0.005em;
+}
+
+/* ─── Чипы (общая база) ─── */
 .pip {
   padding: 4px 10px;
   border: 0.5px solid var(--line);
   border-radius: 999px;
+  font-family: var(--font-sans);
   font-size: 11px;
   font-weight: 400;
   color: var(--fg-muted);
   white-space: nowrap;
   flex-shrink: 0;
-  transition: all 0.3s var(--ease);
+  transition:
+    color 0.25s var(--ease),
+    background 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease),
+    transform 0.18s var(--ease);
   position: relative;
 }
 .pip:hover {
@@ -357,6 +365,10 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   border-color: var(--accent);
   transform: translateY(-1px);
   box-shadow: 0 4px 14px -4px var(--glow);
+}
+.pip:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .pip[aria-pressed="true"] {
   background: var(--accent);
@@ -377,42 +389,37 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
   0%   { opacity: 0.7; transform: scale(0.95); }
   100% { opacity: 0;   transform: scale(1.25); }
 }
-@media (prefers-reduced-motion: reduce) {
-  .pip[aria-pressed="true"]::after { animation: none; }
-}
+
+/* ─── «Общая версия» — визуальный сепаратор перед ней ─── */
 .pip-default {
-  /* Same style as other pips — sans-serif, no italic */
   font-style: normal;
   font-family: var(--font-sans);
-  font-size: inherit;
+  position: relative;
+  margin-left: 8px;
 }
-.pip-name {
-  white-space: nowrap;
-  font-weight: 500;
+.pip-default::before {
+  content: '·';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--fg-faint);
+  font-size: 14px;
+  pointer-events: none;
 }
-.pip-context {
-  /* Visible at ALL screen sizes — touch users can't hover, so context must always be readable */
-  display: inline;
-  font-family: var(--font-mono);
-  font-size: 0.76em;
-  letter-spacing: 0.04em;
-  margin-left: 6px;
-  padding-left: 7px;
-  border-left: 0.5px solid currentColor;
-  opacity: 0.55;
-  white-space: nowrap;
-  font-weight: 400;
-  text-transform: lowercase;
-  transition: opacity 0.25s var(--ease);
+
+/* ─── Mobile onboarding pulse — играется ОДИН раз при первом скролле ─── */
+@keyframes pip-onboard-pulse {
+  0%   { transform: translateY(0)    scale(1);    box-shadow: 0 0 0 0 transparent; }
+  35%  { transform: translateY(-3px) scale(1.05); box-shadow: 0 6px 18px -6px var(--glow); }
+  100% { transform: translateY(0)    scale(1);    box-shadow: 0 0 0 0 transparent; }
 }
-.pip:hover .pip-context,
-.pip:focus-visible .pip-context { opacity: 0.85; }
-.pip[aria-pressed="true"] .pip-context {
-  opacity: 0.78;
-  border-left-color: color-mix(in oklch, currentColor 60%, transparent);
+.persona-ribbon.is-onboarding .pip {
+  animation: pip-onboard-pulse 0.55s var(--ease) 1;
+  animation-delay: calc(var(--pip-i, 0) * 0.07s);
 }
-.pip-default { font-style: normal; }
-.pip-default .pip-name { font-weight: 400; }
+
+/* ─── Адаптация под ширину ─── */
 @media (min-width: 768px) {
   .persona-ribbon {
     gap: 8px;
@@ -420,18 +427,20 @@ em, .serif { font-family: var(--font-italic); font-style: italic; font-weight: 4
     justify-content: flex-end;
     flex-wrap: wrap;
   }
+  .ribbon-label { display: inline-flex; }
   .pip { padding: 5px 12px; font-size: 12px; }
+  .ribbon-mark { font-size: 14px; }
+  .ribbon-label-text { font-size: 13px; }
 }
 @media (min-width: 1280px) {
   .persona-ribbon { gap: 10px; flex-wrap: nowrap; }
+  .ribbon-label { margin-right: 6px; }
 }
-/* Ultra-narrow phones (≤340px) — drop context to save space, fall back to hover/active reveal */
-@media (max-width: 340px) {
-  .pip-context {
-    font-size: 0.72em;
-    margin-left: 4px;
-    padding-left: 5px;
-  }
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .pip[aria-pressed="true"]::after { animation: none; }
+  .persona-ribbon.is-onboarding .pip { animation: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -518,11 +527,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   opacity: 0.6;
   pointer-events: none;
   z-index: -1;
-  animation: hero-aura-drift 14s var(--ease) infinite;
-}
-@keyframes hero-aura-drift {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50%      { transform: translate(-30px, 20px) scale(1.05); }
 }
 .hero-watermark {
   position: absolute;
@@ -565,7 +569,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   -webkit-text-fill-color: transparent;
   color: transparent;
   animation: hero-shimmer 9s var(--ease) infinite;
-  filter: drop-shadow(0 0 18px var(--glow));
+  filter: drop-shadow(0 0 8px var(--glow));
 }
 @supports not (background-clip: text) {
   .hero-h1 .line-italic { color: var(--accent); background: none; -webkit-text-fill-color: currentColor; }
@@ -744,9 +748,9 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   border: 0.5px solid var(--line);
   border-radius: var(--r-lg);
   padding: clamp(22px, 4vw, 32px);
-  box-shadow: 0 30px 80px -40px var(--glow), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 18px 40px -28px var(--glow), 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
 }
 .form-header {
   display: flex; justify-content: space-between; align-items: baseline;
@@ -1072,7 +1076,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   background: var(--accent);
   opacity: 0;
   animation: particle-drift 20s linear infinite;
-  filter: blur(0.6px);
   will-change: transform, opacity;
 }
 @keyframes particle-drift {
@@ -1209,9 +1212,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   place-items: center;
   padding: 16px 22px;
   border-radius: 16px;
-  background: color-mix(in oklch, var(--bg) 82%, transparent);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: color-mix(in oklch, var(--bg) 92%, transparent);
 }
 /* All layers stacked at same point — switch via opacity only, never via position */
 .manifest-text-layer {
@@ -1385,7 +1386,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   width: clamp(160px, 32vw, 260px);
   justify-self: center;
   color: var(--accent);
-  filter: drop-shadow(0 0 32px var(--glow));
+  filter: drop-shadow(0 0 12px var(--glow));
   position: relative;
 }
 .mirror-eye::before {
@@ -3188,7 +3189,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
     var(--surface));
   border: 0.5px solid var(--accent);
   border-radius: var(--r-lg);
-  box-shadow: 0 22px 60px -36px var(--glow);
+  box-shadow: 0 14px 32px -22px var(--glow);
 }
 .peek-sequence-tag {
   display: inline-block;
@@ -3418,7 +3419,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
     linear-gradient(180deg,
       color-mix(in oklch, var(--surface), var(--accent) 4%),
       color-mix(in oklch, var(--surface), transparent 30%));
-  box-shadow: 0 30px 80px -50px var(--glow);
+  box-shadow: 0 18px 40px -28px var(--glow);
 }
 .catalog-focus-mode .cat--active::before {
   content: 'выбрано для тебя';
@@ -3710,7 +3711,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   border-radius: var(--r-lg);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 30px 80px -50px var(--glow);
+  box-shadow: 0 18px 40px -28px var(--glow);
 }
 .review-feature blockquote {
   /* mobile-first: avoid heavy left padding that pushes avatar/footer off layout */
@@ -3876,7 +3877,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
 .team-portrait-slot .team-seal {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
-  filter: drop-shadow(0 0 18px var(--glow));
+  filter: drop-shadow(0 0 8px var(--glow));
   transition: opacity 0.5s var(--ease);
 }
 .team-portrait-slot[data-photo-slot].is-loaded .team-seal { opacity: 0.18; }
@@ -4017,7 +4018,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   height: auto;
   border-radius: 1px;
   box-shadow: 0 1px 0 rgba(40,30,20,0.06);
-  filter: contrast(1.02) saturate(0.95);
   background: #F0E6D2;
   min-height: 80px;
   object-fit: cover;
@@ -4190,7 +4190,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 8px); }
   width: 100%;
   height: auto;
   margin: 0 auto;
-  filter: contrast(1.02) saturate(0.95);
 }
 .doc-modal-stage::after {
   content: '';
@@ -5565,7 +5564,6 @@ body.audience-popup-open { overflow: hidden; }
 </head>
 <body>
 <a class="skip-link" href="#s01-hero">Перейти к содержимому</a>
-<div id="grain" aria-hidden="true"></div>
 <div id="progress-bar" aria-hidden="true"></div>
 
 <header class="site-header" role="banner">
@@ -5615,25 +5613,16 @@ body.audience-popup-open { overflow: hidden; }
     </svg>
     <span class="visually-hidden">Суть · The Essence — главная</span>
   </a>
-  <nav class="persona-ribbon" aria-label="Адаптация под аудиторию">
-    <button class="pip" data-persona-pip="anya" aria-pressed="false" aria-label="Адаптировать сайт под Аню — разбор для себя">
-      <span class="pip-name">Аня</span><span class="pip-context">для&nbsp;себя</span>
-    </button>
-    <button class="pip" data-persona-pip="darya" aria-pressed="false" aria-label="Адаптировать сайт под Дарью — разбор для ребёнка">
-      <span class="pip-name">Дарья</span><span class="pip-context">для&nbsp;ребёнка</span>
-    </button>
-    <button class="pip" data-persona-pip="pair" aria-pressed="false" aria-label="Адаптировать сайт под Марину и Костю — разбор для пары">
-      <span class="pip-name">Марина&nbsp;и&nbsp;Костя</span><span class="pip-context">для&nbsp;пары</span>
-    </button>
-    <button class="pip" data-persona-pip="nikolay" aria-pressed="false" aria-label="Адаптировать сайт под Николая — разбор для команды">
-      <span class="pip-name">Николай</span><span class="pip-context">для&nbsp;команды</span>
-    </button>
-    <button class="pip" data-persona-pip="evgenia" aria-pressed="false" aria-label="Адаптировать сайт под Евгению — разбор для специалистов">
-      <span class="pip-name">Евгения</span><span class="pip-context">для&nbsp;специалистов</span>
-    </button>
-    <button class="pip pip-default" data-persona-pip="default" aria-pressed="true" aria-label="Вернуться к обычной версии сайта">
-      <span class="pip-name">обычная</span>
-    </button>
+  <nav class="persona-ribbon" aria-label="Адаптация сайта под аудиторию">
+    <span class="ribbon-label" aria-hidden="true">
+      <span class="ribbon-mark">✦</span><span class="ribbon-label-text">Хочу понять:</span>
+    </span>
+    <button class="pip" data-persona-pip="anya" aria-pressed="false" aria-label="Хочу понять себя — адаптировать сайт под этот контекст" style="--pip-i:0">Себя</button>
+    <button class="pip" data-persona-pip="darya" aria-pressed="false" aria-label="Хочу понять ребёнка — адаптировать сайт под этот контекст" style="--pip-i:1">Ребёнка</button>
+    <button class="pip" data-persona-pip="pair" aria-pressed="false" aria-label="Хочу понять пару — адаптировать сайт под этот контекст" style="--pip-i:2">Пару</button>
+    <button class="pip" data-persona-pip="nikolay" aria-pressed="false" aria-label="Хочу понять команду — для нанимающих и руководителей" style="--pip-i:3">Команду</button>
+    <button class="pip" data-persona-pip="evgenia" aria-pressed="false" aria-label="Хочу понять клиентов — для психологов, коучей, специалистов" style="--pip-i:4">Клиентов</button>
+    <button class="pip pip-default" data-persona-pip="default" aria-pressed="true" aria-label="Общая версия сайта без подстройки под аудиторию" style="--pip-i:5">Общая версия</button>
   </nav>
   <div class="theme-toggle" role="toolbar" aria-label="Тема">
     <button data-theme-set="light" aria-label="Светлая тема" aria-pressed="true">☀</button>
@@ -8496,6 +8485,43 @@ body.audience-popup-open { overflow: hidden; }
   };
 
   // ────────────────────────────────────────────
+  // RIBBON ONBOARDING — mobile-only пульсация чипов при первом скролле,
+  // чтобы пользователь заметил: эти штуки кликабельны и переключают сайт.
+  // ────────────────────────────────────────────
+  const RibbonOnboarding = {
+    KEY: 'essence-ribbon-onboarded',
+    DURATION_MS: 1100,  // 6 чипов × 0.07s delay + 0.55s anim
+
+    init() {
+      // Только на мобиле, только если ещё не показывали в этой сессии
+      if (!window.matchMedia('(max-width: 767px)').matches) return;
+      if (Motion.reduced && Motion.reduced()) return;
+      try {
+        if (sessionStorage.getItem(this.KEY) === '1') return;
+      } catch (e) { /* sessionStorage недоступен — играем всё равно */ }
+
+      const ribbon = document.querySelector('.persona-ribbon');
+      if (!ribbon) return;
+
+      let triggered = false;
+      const onScroll = () => {
+        if (triggered) return;
+        if (window.scrollY < 40) return;  // нужен реальный скролл, не тап
+        triggered = true;
+        window.removeEventListener('scroll', onScroll);
+        this.play(ribbon);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+    },
+
+    play(ribbon) {
+      ribbon.classList.add('is-onboarding');
+      setTimeout(() => ribbon.classList.remove('is-onboarding'), this.DURATION_MS);
+      try { sessionStorage.setItem(this.KEY, '1'); } catch (e) {}
+    },
+  };
+
+  // ────────────────────────────────────────────
   // STICKY STAGES (s02-manifest, s05-pipeline)
   // ────────────────────────────────────────────
   const Stages = {
@@ -8553,7 +8579,7 @@ body.audience-popup-open { overflow: hidden; }
   // 5-phase scroll-scrubbed: free → bins → sort → dissolve → restored
   // ────────────────────────────────────────────
   const Manifest = {
-    PARTICLE_COUNT: 40,
+    PARTICLE_COUNT: (window.matchMedia('(max-width: 900px)').matches ? 18 : 28),
     SORTED_SIZE: 7,
     BIN_LEFTS_PCT: [4, 36, 68],
     BIN_WIDTH_PCT: 28,
@@ -9684,6 +9710,7 @@ body.audience-popup-open { overflow: hidden; }
     Catalog.render();
     bindPersonaControls();
     Reveal.init();
+    RibbonOnboarding.init();
     AudiencePopup.init();
     Manifest.init();
     Stages.setup('#s02-manifest', 4, (p) => Manifest.update(p));
